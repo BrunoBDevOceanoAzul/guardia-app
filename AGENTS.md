@@ -215,7 +215,7 @@ AWS_S3_BUCKET_ANALYSIS=guardia-uploads-us-east-1
 ---
 
 Última atualização: 2026-04-07
-Status: ✅ ONLINE! App rodando em http://44.204.117.169:3000
+Status: ✅ ONLINE! App rodando em http://35.172.182.107:3000
 
 ### Configuração Atual
 - **Task Definition**: guardia-app:8 (amd64)
