@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CognitoIdentityProviderClient, InitiateAuthCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { cognitoClient as client } from "@/lib/auth/cognito";
+import { InitiateAuthCommand, GetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
 import { db } from "@/lib/db/client";
 import { users, sessions } from "@/lib/db/schema";
 import { hashData, generateToken } from "@/lib/auth/utils";
 import { eq } from "drizzle-orm";
-
-const client = new CognitoIdentityProviderClient({ region: "us-east-1" });
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,18 +14,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Email e senha são obrigatórios" },
         { status: 400 }
-      );
-    }
-
-    const emailHash = hashData(email);
-    const user = await db.query.users.findFirst({
-      where: eq(users.emailHash, emailHash),
-    });
-
-    if (!user) {
-      return NextResponse.json(
-        { error: "Usuário não encontrado" },
-        { status: 401 }
       );
     }
 
@@ -41,6 +28,31 @@ export async function POST(request: NextRequest) {
       });
 
       const authResult = await client.send(initiateAuthCommand);
+
+      // Successfully authenticated with Cognito. Now ensure user exists in local DB.
+      const emailHash = hashData(email);
+      let user = await db.query.users.findFirst({
+        where: eq(users.emailHash, emailHash),
+      });
+
+      if (!user) {
+        // This handles cases where user is in Cognito but not in our DB (e.g. manual creation or sync issues)
+        const getUserCommand = new GetUserCommand({
+          AccessToken: authResult.AuthenticationResult?.AccessToken,
+        });
+        const cognitoUser = await client.send(getUserCommand);
+        
+        const userHash = hashData(`${email}:${Date.now()}`);
+        const result = await db.insert(users).values({
+          userHash,
+          emailHash,
+          cognitoSub: cognitoUser.UserAttributes?.find(a => a.Name === "sub")?.Value,
+          role: "user",
+          emailVerified: true, // If they logged in, Cognito confirms they are verified (or allowed to login)
+        }).returning();
+        
+        user = result[0];
+      }
 
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + 7);
@@ -72,6 +84,14 @@ export async function POST(request: NextRequest) {
       return response;
     } catch (cognitoError: any) {
       console.error("Cognito SignIn Error:", cognitoError.message);
+      
+      if (cognitoError.name === "UserNotConfirmedException") {
+        return NextResponse.json(
+          { error: "Email não verificado", code: "USER_NOT_CONFIRMED" },
+          { status: 401 }
+        );
+      }
+
       if (cognitoError.name === "NotAuthorizedException") {
         return NextResponse.json(
           { error: "Email ou senha incorretos" },
@@ -79,7 +99,7 @@ export async function POST(request: NextRequest) {
         );
       }
       return NextResponse.json(
-        { error: "Erro ao fazer login: " + cognitoError.message },
+        { error: "Erro ao fazer login: " + (cognitoError.message || "Erro desconhecido") },
         { status: 500 }
       );
     }

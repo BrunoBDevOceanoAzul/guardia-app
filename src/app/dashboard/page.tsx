@@ -1,7 +1,20 @@
-import { redirect } from "next/navigation";
+"use client";
+
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function Dashboard() {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/signout", { method: "POST" });
+      router.push("/");
+    } catch (error) {
+      console.error("Erro ao sair:", error);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
       <nav className="fixed top-0 left-0 right-0 z-40 bg-zinc-900/80 backdrop-blur-md border-b border-zinc-800">
@@ -13,7 +26,12 @@ export default function Dashboard() {
             <Link href="/analyze" className="text-zinc-400 hover:text-white">
               Analisar
             </Link>
-            <button className="text-zinc-400 hover:text-white">Sair</button>
+            <button 
+              onClick={handleLogout}
+              className="text-zinc-400 hover:text-white"
+            >
+              Sair
+            </button>
           </div>
         </div>
       </nav>

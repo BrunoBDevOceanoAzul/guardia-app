@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CognitoIdentityProviderClient, SignUpCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { cognitoClient as client } from "@/lib/auth/cognito";
+import { SignUpCommand } from "@aws-sdk/client-cognito-identity-provider";
 import { db } from "@/lib/db/client";
 import { users } from "@/lib/db/schema";
 import { hashData } from "@/lib/auth/utils";
 import { eq } from "drizzle-orm";
-
-const client = new CognitoIdentityProviderClient({ region: "us-east-1" });
 
 export async function POST(request: NextRequest) {
   try {

@@ -19,7 +19,11 @@
       ],
       "environment": [
         { "name": "NODE_ENV", "value": "production" },
-        { "name": "PORT", "value": "3000" }
+        { "name": "PORT", "value": "3000" },
+        { "name": "AWS_REGION", "value": "us-east-1" },
+        { "name": "AWS_S3_BUCKET_ANALYSIS", "value": "guardia-analysis-archive" },
+        { "name": "AWS_S3_ENDPOINT", "value": "https://acessobucketguardia-rf113rcgmu8fz3ah5snm3zbp6f6mnuse1a-s3alias.s3.us-east-1.amazonaws.com" },
+        { "name": "COGNITO_CLIENT_ID", "value": "796qit0m80shb7g4v8vuvg2p86" }
       ],
       "secrets": [
         {

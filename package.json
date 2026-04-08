@@ -15,7 +15,9 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:check": "drizzle-kit check",
-    "db:seed": "tsx scripts/seed.ts"
+    "db:seed": "tsx scripts/seed.ts",
+    "tunnel": "lt --port 3000 --subdomain guardia-dev",
+    "dev:tunnel": "concurrently \"npm run dev\" \"npm run tunnel\""
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.1026.0",
@@ -40,9 +42,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "biome": "^0.3.3",
+    "concurrently": "^9.2.1",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
+    "localtunnel": "^2.0.2",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"
