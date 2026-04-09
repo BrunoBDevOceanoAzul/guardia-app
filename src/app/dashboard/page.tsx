@@ -23,8 +23,8 @@ export default function Dashboard() {
             <span className="text-rose-400">Guardiã</span>
           </h1>
           <div className="flex items-center gap-6">
-            <Link href="/analyze" className="text-zinc-400 hover:text-white">
-              Analisar
+            <Link href="/buscas" className="text-zinc-400 hover:text-white">
+              Buscas
             </Link>
             <button 
               onClick={handleLogout}
@@ -56,15 +56,15 @@ export default function Dashboard() {
           </div>
 
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8">
-            <h3 className="text-xl font-bold mb-4">Nova Análise</h3>
+            <h3 className="text-xl font-bold mb-4">Nova Busca Protegida</h3>
             <p className="text-zinc-400 mb-6">
-              Cole uma conversa do WhatsApp para analisar padrões de violência.
+              Consulte CPF e antecedentes multitribunal em um fluxo protegido e com histórico anonimizado.
             </p>
             <Link
-              href="/analyze"
+              href="/buscas"
               className="inline-block bg-rose-500 hover:bg-rose-600 px-6 py-3 rounded-lg font-medium transition-colors"
             >
-              Iniciar análise
+              Abrir buscas
             </Link>
           </div>
         </div>

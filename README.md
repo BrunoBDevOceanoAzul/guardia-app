@@ -55,11 +55,23 @@ AWS (opcional):
 - `AWS_S3_ENDPOINT` (opcional)
 - `AWS_S3_FORCE_PATH_STYLE` (opcional)
 
+Buscas protegidas por CPF e CNJ:
+- `CPF_API_BASE_URL`
+- `CPF_API_KEY`
+- `CNJ_API_BASE_URL`
+- `CNJ_API_KEY`
+- `CNJ_TRIBUNAL_CODES` (lista separada por vírgula, por exemplo `TJSP,TJRJ,TRF1`)
+- `MONGODB_URI`
+- `MONGODB_DB_NAME`
+
+Se essas variáveis não estiverem configuradas, as rotas `POST /api/busca/cpf` e `POST /api/busca/antecedentes` respondem `503`.
+
 ## Scripts
 
 - `npm run dev`: desenvolvimento com Turbopack
 - `npm run dev:stable`: fallback estável com polling
 - `npm run build`: build de produção
+- `npm test`: suíte Node test runner para integrações e domínio de busca
 - `npm run start`: inicia build de produção
 - `npm run check`: check + fix com Biome
 - `npm run db:*`: comandos Drizzle

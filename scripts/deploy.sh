@@ -95,6 +95,13 @@ GEMINI_KEY=$(source_env "GEMINI_API_KEY" "")
 S3_BUCKET=$(source_env "AWS_S3_BUCKET_ANALYSIS" "guardia-analysis-archive")
 S3_ENDPOINT=$(source_env "AWS_S3_ENDPOINT" "")
 COGNITO_ID=$(source_env "COGNITO_CLIENT_ID" "796qit0m80shb7g4v8vuvg2p86")
+CPF_API_BASE_URL=$(source_env "CPF_API_BASE_URL" "")
+CPF_API_KEY=$(source_env "CPF_API_KEY" "")
+CNJ_API_BASE_URL=$(source_env "CNJ_API_BASE_URL" "")
+CNJ_API_KEY=$(source_env "CNJ_API_KEY" "")
+CNJ_TRIBUNAL_CODES=$(source_env "CNJ_TRIBUNAL_CODES" "TJSP")
+MONGODB_URI=$(source_env "MONGODB_URI" "")
+MONGODB_DB_NAME=$(source_env "MONGODB_DB_NAME" "guardia")
 APP_ACCESS_KEY=$(source_env "AWS_ACCESS_KEY_ID" "")
 APP_SECRET_KEY=$(source_env "AWS_SECRET_ACCESS_KEY" "")
 MAPS_KEY=$(source_env "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" "")
@@ -129,6 +136,13 @@ TASK_DEF=$(cat <<EOJSON
         { "name": "COGNITO_CLIENT_ID",        "value": "${COGNITO_ID}" },
         { "name": "DATABASE_URL",                        "value": "${DB_URL}" },
         { "name": "GEMINI_API_KEY",                      "value": "${GEMINI_KEY}" },
+        { "name": "CPF_API_BASE_URL",                    "value": "${CPF_API_BASE_URL}" },
+        { "name": "CPF_API_KEY",                         "value": "${CPF_API_KEY}" },
+        { "name": "CNJ_API_BASE_URL",                    "value": "${CNJ_API_BASE_URL}" },
+        { "name": "CNJ_API_KEY",                         "value": "${CNJ_API_KEY}" },
+        { "name": "CNJ_TRIBUNAL_CODES",                  "value": "${CNJ_TRIBUNAL_CODES}" },
+        { "name": "MONGODB_URI",                         "value": "${MONGODB_URI}" },
+        { "name": "MONGODB_DB_NAME",                     "value": "${MONGODB_DB_NAME}" },
         { "name": "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY",     "value": "${MAPS_KEY}" },
         { "name": "IP_HASH_SALT",                        "value": "${IP_SALT}" }
       ],

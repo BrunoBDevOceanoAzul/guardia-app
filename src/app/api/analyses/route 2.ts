@@ -13,9 +13,9 @@ export async function GET(request: NextRequest) {
     const userAnalyses = await db
       .select({
         id: analyses.id,
-        riskScore: analyses.riskScore,
-        riskLevel: analyses.riskLevel,
-        summary: analyses.summary,
+        step: analyses.step,
+        outputData: analyses.outputData,
+        confidence: analyses.confidence,
         createdAt: analyses.createdAt,
       })
       .from(analyses)

@@ -77,6 +77,19 @@ Crie o arquivo `.env` com suas credenciais:
 GEMINI_API_KEY=sua_chave_gemini
 GEMINI_MODEL=gemini-2.5-flash
 
+# Busca CPF
+CPF_API_BASE_URL=https://apicpf.com/api
+CPF_API_KEY=sua_chave_apicpf
+
+# CNJ / DataJud
+CNJ_API_BASE_URL=https://api.cnj.jus.br/api/v2
+CNJ_API_KEY=sua_chave_cnj
+CNJ_TRIBUNAL_CODES=TJSP,TJRJ,TRF1
+
+# MongoDB para histórico anonimizado
+MONGODB_URI=mongodb+srv://usuario:senha@cluster.mongodb.net/?appName=guardia
+MONGODB_DB_NAME=guardia
+
 # AWS Credentials
 AWS_ACCESS_KEY_ID=sua_access_key
 AWS_SECRET_ACCESS_KEY=sua_secret_key
@@ -138,6 +151,12 @@ Acesse a URL retornada pelo script de deploy (ex: `https://xxxxx.us-east-1.awsap
 
 1. Verifique se o App Client tem `USER_PASSWORD_AUTH` habilitado
 2. Verifique se o usuário foi confirmado (verificação de email)
+
+### Rotas de Busca Respondendo 503
+
+1. Verifique se `CPF_API_BASE_URL` e `CPF_API_KEY` estão presentes no task definition
+2. Verifique se `CNJ_API_BASE_URL`, `CNJ_API_KEY` e `CNJ_TRIBUNAL_CODES` foram enviados ao container
+3. Verifique se `MONGODB_URI` e `MONGODB_DB_NAME` estão configurados
 
 ### Erro no App Runner
 

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:stable": "WATCHPACK_POLLING=true next dev --webpack",
+    "test": "node --import tsx --test tests/**/*.test.ts",
     "build": "next build",
     "start": "next start",
     "lint": "biome check .",
@@ -34,6 +35,7 @@
     "dotenv": "^17.4.1",
     "drizzle-orm": "^0.45.2",
     "highlight.js": "^11.11.1",
+    "mongodb": "^7.1.1",
     "next": "16.2.2",
     "pg": "^8.20.0",
     "react": "19.2.4",
