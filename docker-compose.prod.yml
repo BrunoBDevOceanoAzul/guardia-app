@@ -1,0 +1,62 @@
+services:
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - APP_ENV=dev
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.guardia-dev.rule=Host(`dev.irisregistro.qzz.io`)"
+      - "traefik.http.routers.guardia-dev.entrypoints=websecure"
+      - "traefik.http.routers.guardia-dev.tls=true"
+      - "traefik.http.services.guardia-dev.loadbalancer.server.port=3000"
+    restart: unless-stopped
+
+  app-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+      - APP_ENV=test
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.guardia-test.rule=Host(`test.irisregistro.qzz.io`)"
+      - "traefik.http.routers.guardia-test.entrypoints=websecure"
+      - "traefik.http.routers.guardia-test.tls=true"
+      - "traefik.http.services.guardia-test.loadbalancer.server.port=3000"
+    restart: unless-stopped
+
+  app-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=production
+      - APP_ENV=prod
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.guardia-prod.rule=Host(`irisregistro.qzz.io`)"
+      - "traefik.http.routers.guardia-prod.entrypoints=websecure"
+      - "traefik.http.routers.guardia-prod.tls=true"
+      - "traefik.http.services.guardia-prod.loadbalancer.server.port=3000"
+    restart: unless-stopped
+
+  traefik:
+    image: traefik:v3.0
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/certs:/etc/traefik/certs:ro
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+    restart: unless-stopped
