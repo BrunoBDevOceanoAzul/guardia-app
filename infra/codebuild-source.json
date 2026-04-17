@@ -1,0 +1,5 @@
+{
+  "type": "CODESTAR_SOURCE_CONNECTION",
+  "location": "arn:aws:codestar-connections:us-east-1:026544697783:connection/54c3c35e-b79e-464d-9da8-a71466bcec85:fullRepositoryName/BrunoBDevOceanoAzul/guardia-app",
+  "buildspec": "buildspec.yml"
+}

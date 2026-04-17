@@ -1,0 +1,21 @@
+{
+  "name": "guardia-app-build",
+  "source": {
+    "type": "CODESTAR_SOURCE_CONNECTION",
+    "location": "arn:aws:codestar-connections:us-east-1:026544697783:connection/54c3c35e-b79e-464d-9da8-a71466bcec85:fullRepositoryName/BrunoBDevOceanoAzul/guardia-app",
+    "buildspec": "buildspec.yml"
+  },
+  "artifacts": {
+    "type": "S3",
+    "location": "guardia-pipeline-artifacts",
+    "packaging": "ZIP",
+    "name": "build-output.zip"
+  },
+  "environment": {
+    "type": "LINUX_CONTAINER",
+    "image": "aws/codebuild/standard:7.0",
+    "computeType": "BUILD_GENERAL1_SMALL",
+    "privilegedMode": true
+  },
+  "serviceRole": "arn:aws:iam::026544697783:role/GuardiaCodeBuildRole"
+}
