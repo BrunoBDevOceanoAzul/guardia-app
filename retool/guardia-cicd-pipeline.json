@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "name": "Guardia CI/CD Pipeline",
+    "description": "Dashboard de monitoramento do pipeline de CI/CD - Dev, Test e Prod",
+    "type": "application"
+  },
+  "pages": [
+    {
+      "name": "Pipeline Dashboard",
+      "components": [
+        {
+          "type": "container",
+          "name": "header",
+          "properties": {
+            "title": "Guardia App - CI/CD Pipeline",
+            "subtitle": "Monitoramento em tempo real dos ambientes"
+          }
+        },
+        {
+          "type": "stats",
+          "name": "devStatus",
+          "properties": {
+            "title": "DEV",
+            "value": "Running",
+            "color": "blue",
+            "url": "https://dev.irisregistro.qzz.io"
+          }
+        },
+        {
+          "type": "stats",
+          "name": "testStatus",
+          "properties": {
+            "title": "TEST",
+            "value": "Running",
+            "color": "green",
+            "url": "https://test.irisregistro.qzz.io"
+          }
+        },
+        {
+          "type": "stats",
+          "name": "prodStatus",
+          "properties": {
+            "title": "PROD",
+            "value": "Running",
+            "color": "green",
+            "url": "https://irisregistro.qzz.io"
+          }
+        },
+        {
+          "type": "table",
+          "name": "deployHistory",
+          "properties": {
+            "title": "Histórico de Deploys",
+            "columns": ["Branch", "Commit", "Status", "Timestamp", "Environment"]
+          }
+        },
+        {
+          "type": "button",
+          "name": "deployDev",
+          "properties": {
+            "text": "Deploy DEV",
+            "color": "blue"
+          }
+        },
+        {
+          "type": "button",
+          "name": "deployTest",
+          "properties": {
+            "text": "Deploy TEST",
+            "color": "green"
+          }
+        },
+        {
+          "type": "button",
+          "name": "deployProd",
+          "properties": {
+            "text": "Deploy PROD",
+            "color": "red"
+          }
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "name": "checkDevStatus",
+      "dataSource": "REST API",
+      "url": "http://44.222.98.180:3000",
+      "method": "GET"
+    },
+    {
+      "name": "checkTestStatus",
+      "dataSource": "REST API",
+      "url": "http://44.222.98.180:3001",
+      "method": "GET"
+    },
+    {
+      "name": "checkProdStatus",
+      "dataSource": "REST API",
+      "url": "http://44.222.98.180:3002",
+      "method": "GET"
+    },
+    {
+      "name": "deployToDev",
+      "dataSource": "REST API",
+      "url": "https://api.github.com/repos/BrunoBDevOceanoAzul/guardia-app/actions/workflows/ci-cd.yml/dispatches",
+      "method": "POST",
+      "body": {"ref": "develop"}
+    },
+    {
+      "name": "deployToTest",
+      "dataSource": "REST API",
+      "url": "https://api.github.com/repos/BrunoBDevOceanoAzul/guardia-app/actions/workflows/ci-cd.yml/dispatches",
+      "method": "POST",
+      "body": {"ref": "test"}
+    },
+    {
+      "name": "deployToProd",
+      "dataSource": "REST API",
+      "url": "https://api.github.com/repos/BrunoBDevOceanoAzul/guardia-app/actions/workflows/ci-cd.yml/dispatches",
+      "method": "POST",
+      "body": {"ref": "main"}
+    }
+  ],
+  "resources": [
+    {
+      "name": "AWS Secrets Manager",
+      "type": "aws-secrets-manager",
+      "region": "us-east-1"
+    },
+    {
+      "name": "GitHub API",
+      "type": "REST API",
+      "url": "https://api.github.com"
+    },
+    {
+      "name": "EC2 Guardia",
+      "type": "REST API",
+      "url": "http://44.222.98.180"
+    }
+  ]
+}

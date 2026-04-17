@@ -1,0 +1,73 @@
+{
+  "pipeline": {
+    "name": "guardia-app-pipeline",
+    "roleArn": "arn:aws:iam::026544697783:role/GuardiaCodePipelineRole",
+    "artifactStore": {
+      "type": "S3",
+      "location": "guardia-pipeline-artifacts"
+    },
+    "stages": [
+      {
+        "name": "Source",
+        "actions": [
+          {
+            "name": "Source",
+            "actionTypeId": {
+              "category": "Source",
+              "owner": "AWS",
+              "provider": "CodeStarSourceConnection",
+              "version": "1"
+            },
+            "outputArtifacts": [{"name": "SourceOutput"}],
+            "configuration": {
+              "ConnectionArn": "arn:aws:codestar-connections:us-east-1:026544697783:connection/54c3c35e-b79e-464d-9da8-a71466bcec85",
+              "FullRepositoryId": "BrunoBDevOceanoAzul/guardia-app",
+              "BranchName": "develop"
+            },
+            "runOrder": 1
+          }
+        ]
+      },
+      {
+        "name": "Build",
+        "actions": [
+          {
+            "name": "Build",
+            "actionTypeId": {
+              "category": "Build",
+              "owner": "AWS",
+              "provider": "CodeBuild",
+              "version": "1"
+            },
+            "inputArtifacts": [{"name": "SourceOutput"}],
+            "outputArtifacts": [{"name": "BuildOutput"}],
+            "configuration": {
+              "ProjectName": "guardia-app-build-dev"
+            },
+            "runOrder": 1
+          }
+        ]
+      },
+      {
+        "name": "Deploy",
+        "actions": [
+          {
+            "name": "DeployToEC2",
+            "actionTypeId": {
+              "category": "Deploy",
+              "owner": "AWS",
+              "provider": "CodeDeploy",
+              "version": "1"
+            },
+            "inputArtifacts": [{"name": "BuildOutput"}],
+            "configuration": {
+              "ApplicationName": "guardia-app",
+              "DeploymentGroupName": "guardia-dev-group"
+            },
+            "runOrder": 1
+          }
+        ]
+      }
+    ]
+  }
+}

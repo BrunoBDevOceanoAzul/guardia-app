@@ -1,0 +1,48 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "=== Pre-build ==="
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - BRANCH_NAME=$(echo $CODEBUILD_SOURCE_VERSION | sed 's/refs\/heads\///')
+      - IMAGE_TAG="${BRANCH_NAME}-${COMMIT_HASH}"
+      - echo "Image tag: $IMAGE_TAG"
+      - echo "Branch: $BRANCH_NAME"
+
+  build:
+    commands:
+      - echo "=== Build ==="
+      - echo "Installing dependencies..."
+      - npm install
+      - echo "Running lint..."
+      - npm run lint || true
+      - echo "Building Docker image..."
+      - docker build --platform linux/amd64 -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG .
+      - docker tag $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
+
+  post_build:
+    commands:
+      - echo "=== Post-build ==="
+      - echo "Pushing Docker image to ECR..."
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
+      - echo "Deploying to EC2 via SSM..."
+      - chmod +x deploy.sh
+      - ./deploy.sh "$BRANCH_NAME" "$IMAGE_TAG" "$EC2_INSTANCE_ID" "$AWS_REGION"
+      - echo "Deploy complete!"
+
+artifacts:
+  files:
+    - deploy.sh
+    - buildspec.yml
+
+env:
+  variables:
+    AWS_REGION: "us-east-1"
+    ECR_REPOSITORY: "guardia-app"
+    EC2_INSTANCE_ID: "i-07a6ed42a79520d16"
+  parameter-store:
+    AWS_ACCOUNT_ID: "/guardia/aws-account-id"
